@@ -94,6 +94,12 @@ const count = (p, f) => p.evaluate(f);
   await A.evaluate(() => syncNow()); await B.evaluate(() => syncNow()); await A.evaluate(() => syncNow()); await sleep(300);
   check(await A.evaluate(() => routineCount(today(), 'cards')) === 2 && await B.evaluate(() => routineCount(today(), 'cards')) === 2, 'routine counts from both phones add up');
 
+  // --- a newborn sunan ticked on one phone shows on the other
+  await A.evaluate(() => { S.sunan.tahnik = { date: today(), u: Date.now() }; save(); });
+  await sleep(2200);
+  await B.evaluate(() => syncNow()); await sleep(400);
+  check(await B.evaluate(() => !!(S.sunan.tahnik && S.sunan.tahnik.date)), 'a newborn sunan reaches the other phone');
+
   // --- offline: father logs while the cloud is down, it arrives later
   await ctl({ down: true });
   await B.click('.qb[data-type="diaper"]'); await B.waitForSelector('.sheet'); await B.click('.sheet [data-act="dia"][data-v="wet"]');

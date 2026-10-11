@@ -62,6 +62,7 @@ VIEWS.home = function () {
     chart24(Date.now()) +
     '<div class="legend" style="margin-top:6px"><span><i style="background:var(--c-sleep)"></i>نوم</span><span><i style="background:var(--c-feed);border-radius:50%"></i>رضاعة</span><span><i style="background:var(--c-bottle);border-radius:50%"></i>ببرونة</span><span><i style="background:var(--c-wet)"></i>حفاض</span></div></section>';
   h += dayPlanHtml(a, k);
+  h += faithHomeHtml();
   h += upcomingHtml(a, true);
   return h;
 };
@@ -94,7 +95,7 @@ function dayPlanHtml(a, k) {
   let h = '<section class="card play"><div class="h2" style="margin-bottom:4px">' + (hard ? 'الحد الأدنى يكفي اليوم' : esc(p.title)) +
     '<button class="chip" style="margin-inline-start:auto" data-act="hard" aria-pressed="' + hard + '">' + ic('lifebuoy') + 'يوم صعب</button></div>';
   if (hard) {
-    h += '<div class="rt">' + ROUTINE_MIN.map((it) => routineRow(k, it)).join('') + '</div><p class="xs mute" style="margin-top:6px">وقت البطن والكروت والتمارين يمكن أن تنتظر بلا ذنب.</p>';
+    h += '<div class="rt">' + ROUTINE_MIN.filter((it) => S.settings.adhkar || it.id !== 'm_faith').map((it) => routineRow(k, it)).join('') + '</div><p class="xs mute" style="margin-top:6px">وقت البطن والكروت والتمارين يمكن أن تنتظر بلا ذنب.</p>';
   } else {
     const items = S.routine.items.filter((i) => !i.off && (S.settings.adhkar || !/^adhkar/.test(i.id)));
     const done = items.filter((it) => routineCount(k, it.id) >= it.target).length;

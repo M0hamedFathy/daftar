@@ -14,11 +14,12 @@ SRC = os.path.join(HERE, 'src')
 ASSETS = os.path.join(HERE, 'assets')
 VERSION = '1.0'
 ORDER = ['data.js', 'core.js', 'charts.js', 'ui_base.js', 'ui_home.js', 'ui_log.js', 'ui_hist.js', 'ui_health.js',
-         'ui_more.js', 'sync.js', 'main.js']
+         'ui_more.js', 'faith.js', 'sync.js', 'main.js']
 FIREBASE = ['firebase-app.js', 'firebase-auth.js', 'firebase-firestore-lite.js']
 APP_ICONS = ['icon-192.png', 'icon-512.png', 'maskable-512.png', 'apple-touch-icon.png']
-FONTS = [('Alexandria', 'alexandria', w) for w in (600, 700, 800)] + \
-        [('IBM Plex Sans Arabic', 'ibm-plex-sans-arabic', w) for w in (400, 500, 600, 700)]
+FONTS = [('Alexandria', 'alexandria', w, ('arabic', 'latin')) for w in (600, 700, 800)] + \
+        [('IBM Plex Sans Arabic', 'ibm-plex-sans-arabic', w, ('arabic', 'latin')) for w in (400, 500, 600, 700)] + \
+        [('Amiri Quran', 'amiri-quran', 400, ('arabic',))]
 AR_RANGE = ('U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, '
             'U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC')
 LA_RANGE = ('U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, '
@@ -42,13 +43,15 @@ def write(p, s):
 
 
 def font_files():
-    return ['%s-%s-%d-normal.woff2' % (slug, sub, w) for _, slug, w in FONTS for sub in ('arabic', 'latin')]
+    return ['%s-%s-%d-normal.woff2' % (slug, sub, w) for _, slug, w, subs in FONTS for sub in subs]
 
 
 def font_css(embed):
     css = []
-    for fam, slug, w in FONTS:
+    for fam, slug, w, subs in FONTS:
         for sub, rng in (('arabic', AR_RANGE), ('latin', LA_RANGE)):
+            if sub not in subs:
+                continue
             fn = '%s-%s-%d-normal.woff2' % (slug, sub, w)
             if embed:
                 with open(os.path.join(ASSETS, 'fonts', fn), 'rb') as f:

@@ -157,6 +157,21 @@ function check(cond, msg) { if (!cond) { errors.push('ASSERT: ' + msg); console.
   await page.click('.nav [data-v="home"]');
   await shotFull(page, 'home-data');
 
+  // faith screen: tawidh, adhkar, du'a, his stage, newborn sunan, Hijri occasions
+  await page.click('.nav [data-v="more"]');
+  await page.click('[data-act="more"][data-v="faith"]');
+  await page.waitForSelector('.dk.big');
+  check(/أعيذك|أُعيذك/.test(await page.textContent('.dk.big')), 'faith screen shows the tawidh');
+  check(await page.$$eval('details.fold', (d) => d.length) >= 4, 'adhkar and du\'a are folded sections');
+  await page.click('[data-chg="sunan"][data-id="aqiqa"]');
+  check(await page.evaluate(() => !!(S.sunan.aqiqa && S.sunan.aqiqa.date)), 'a newborn sunan can be ticked');
+  await shotFull(page, 'faith');
+  check(await page.evaluate(() => S.routine.items.filter((i) => /^adhkar_/.test(i.id)).length) === 4, 'four faith items in the routine');
+  const mig = await page.evaluate(() => { const o = normalize({ routine: { items: [{ id: 'adhkar_am', label: 'تعويذ الصباح', target: 1 }, { id: 'tummy', label: 'x', target: 4 }], u: 0, log: {} } }); return [o.routine.items.length, o.routine.items[0].label]; });
+  check(mig[0] === 5 && mig[1] === 'أذكار الصباح وتعويذه', 'older notebooks receive the new faith items');
+  const occ = await page.evaluate(() => nextOccasions(3).map((o) => o.ev.title + ' ' + dayKey(o.t)));
+  check(occ.length === 3, 'next Hijri occasions: ' + occ.join('، '));
+
   // persistence across reload
   const before = await page.evaluate(() => live(S.events).length);
   await sleep(600);

@@ -169,6 +169,7 @@ function collectChanges(P) {
   for (const k of REC_KINDS) for (const r of S[k] || []) if (r && r.id) add('r_' + k + '_' + r.id, k, r, r.u);
   for (const [id, rec] of Object.entries(S.vax || {})) if (rec) add('vax_' + id, 'vax', rec, rec.u, id);
   for (const [id, rec] of Object.entries(S.ms || {})) if (rec) add('ms_' + id.replace(/[^A-Za-z0-9_-]/g, '-'), 'ms', rec, rec.u, id);
+  for (const [id, rec] of Object.entries(S.sunan || {})) if (rec) add('sn_' + id, 'sunan', rec, rec.u, id);
   // routine ticks: one document per day per phone, so two phones never overwrite each other
   for (const [day, items] of Object.entries((S.routine && S.routine.log) || {})) {
     const mine = {}; let u = 0;
@@ -213,8 +214,8 @@ function applyRemote(key, x, M) {
     const arr = S[x.k], v = x.v; if (!v || !v.id) return false;
     const i = arr.findIndex((r) => r.id === v.id);
     if (i < 0) { arr.push(v); ch = true; } else if (u > (arr[i].u || 0)) { arr[i] = v; ch = true; }
-  } else if (x.k === 'vax' || x.k === 'ms') {
-    const map = S[x.k], cur = map[x.id];
+  } else if (x.k === 'vax' || x.k === 'ms' || x.k === 'sunan') {
+    const map = S[x.k] = S[x.k] || {}, cur = map[x.id];
     if (!cur || u > (cur.u || 0)) { map[x.id] = x.v; ch = true; }
   } else if (x.k === 'rt') {
     const L = S.routine.log, dev = x.by; L[x.id] = L[x.id] || {};

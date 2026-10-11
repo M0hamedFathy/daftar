@@ -24,6 +24,7 @@
   --diaper-t: #E0F1FD;
   --play-t: #FFE5DE;
   --health-t: #DEF6EA;
+  --faith-t: #F6EEDD;
   --warn: #D3301C;
   --warn-t: #FDE7E3;
   --ok: #0F7A4B;
@@ -51,7 +52,7 @@
     --bg: #121019; --surface: #1C1926; --surface2: #272336; --ink: #F1EFF7; --mute: #ABA5BA; --line: #4A4462; --hair: #322D44;
     --accent: #A08AF7; --on-accent: #120F1A; --on-cat: #15121C;
     --feed: #E2AE2E; --sleep: #9A82E6; --diaper: #4AA6E0; --play: #E8664A; --health: #3DB884; --mind: #E07FAE; --faith: #C2A062; --money: #9CC443;
-    --feed-t: #3A3018; --sleep-t: #2B2545; --diaper-t: #18303F; --play-t: #3D241E; --health-t: #17362A;
+    --feed-t: #3A3018; --sleep-t: #2B2545; --diaper-t: #18303F; --play-t: #3D241E; --health-t: #17362A; --faith-t: #352C1B;
     --warn: #FF6F5B; --warn-t: #3F1D19; --ok: #4CD69A;
     --c-sleep: #8B6CF0; --c-feed: #C98500; --c-bottle: #E5484D; --c-wet: #1E9FD8; --c-dirty: #A86A0A; --c-tummy: #E5484D;
     --shadow: 0 2px 0 #000;
@@ -62,7 +63,7 @@
   --bg: #121019; --surface: #1C1926; --surface2: #272336; --ink: #F1EFF7; --mute: #ABA5BA; --line: #4A4462; --hair: #322D44;
   --accent: #A08AF7; --on-accent: #120F1A; --on-cat: #15121C;
   --feed: #E2AE2E; --sleep: #9A82E6; --diaper: #4AA6E0; --play: #E8664A; --health: #3DB884; --mind: #E07FAE; --faith: #C2A062; --money: #9CC443;
-  --feed-t: #3A3018; --sleep-t: #2B2545; --diaper-t: #18303F; --play-t: #3D241E; --health-t: #17362A;
+  --feed-t: #3A3018; --sleep-t: #2B2545; --diaper-t: #18303F; --play-t: #3D241E; --health-t: #17362A; --faith-t: #352C1B;
   --warn: #FF6F5B; --warn-t: #3F1D19; --ok: #4CD69A;
   --c-sleep: #8B6CF0; --c-feed: #C98500; --c-bottle: #E5484D; --c-wet: #1E9FD8; --c-dirty: #A86A0A; --c-tummy: #E5484D;
   --shadow: 0 2px 0 #000;
@@ -463,3 +464,21 @@ table.tb tr:last-child td { border-bottom: 0; }
 .famcode { font: 800 34px/1.2 var(--font-d); letter-spacing: 6px; text-align: center; margin: 10px 0 12px; padding: 10px; border: 2px dashed var(--line); border-radius: 14px; background: var(--surface); }
 a.btn { text-decoration: none; color: inherit; }
 .toast.top { bottom: auto; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 95; }
+
+/* faith and upbringing */
+.card.faith { background: var(--faith-t); }
+.qt { font-family: 'Amiri Quran', 'IBM Plex Sans Arabic', serif; font-size: 19px; line-height: 2.05; margin: 2px 0; }
+.qt .an { font-size: 15px; color: var(--mute); white-space: nowrap; }
+.dk { display: block; font-family: 'Amiri Quran', 'IBM Plex Sans Arabic', serif; font-size: 17px; line-height: 1.85; margin: 2px 0; }
+.dk.big { font-size: 22px; line-height: 1.8; font-weight: 700; text-align: center; margin: 4px 0 6px; }
+details.fold { border-top: 1px solid var(--hair); padding: 8px 0 4px; }
+details.fold:first-of-type { border-top: 0; }
+details.fold summary { cursor: pointer; font: 700 14.5px/1.4 var(--font-d); list-style: none; display: flex; align-items: center; gap: 6px; padding: 4px 0; }
+details.fold summary::-webkit-details-marker { display: none; }
+details.fold summary::before { content: ''; width: 8px; height: 8px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(135deg); transition: transform .15s; margin-inline-end: 4px; }
+details.fold[open] summary::before { transform: rotate(45deg); }
+details.fold h4 { font-size: 13.5px; margin: 8px 0 0; color: var(--mute); }
+ul.dots { margin: 0; padding: 0; list-style: none; }
+ul.dots li { position: relative; padding-inline-start: 16px; margin: 0 0 5px; font-size: 14px; line-height: 1.55; }
+ul.dots li::before { content: ''; position: absolute; inset-inline-start: 2px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: var(--faith); border: 1.5px solid var(--line); }
+@media (prefers-reduced-motion: reduce) { details.fold summary::before { transition: none; } }

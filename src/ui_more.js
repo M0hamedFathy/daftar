@@ -4,6 +4,7 @@
 --------------------------------------------------------------------------- */
 
 const MORE = [
+  ['faith', 'hands-praying', 'bg-faith', 'الإيمان والتنشئة', 'الأذكار بنصّها، وأدعية الذرية، وما نغرسه في عمره، وسنن المولود والمناسبات'],
   ['cloud', 'cloud-arrow-up', 'bg-sleep', 'الحساب والمزامنة', 'احفظوا الدفتر في حسابكم، وشاركوه بين موبايل الأم والأب'],
   ['backup', 'file-arrow-down', 'bg-diaper', 'النسخ الاحتياطي والنقل', 'ملف أو كود، لنقل البيانات يدويًا أو حفظها'],
   ['plan', 'flag', 'bg-play', 'الخطة والروتين', 'خطة الأسابيع، وتعديل روتين اليوم'],
@@ -182,7 +183,7 @@ MV.settings = function () {
   return '<section class="card"><h3>بيانات الطفل</h3><p class="sm">' + esc(P.name || 'بلا اسم') + '، ' + (P.sex === 'f' ? 'بنت' : 'ولد') + '، وُلد ' + fDateY(keyMs(P.birth)) + (P.due ? '، والموعد المتوقع كان ' + fDateY(keyMs(P.due)) : '') + '.</p>' +
     '<div class="btns" style="margin-top:8px"><button class="btn sm" data-act="prof-edit">' + ic('pencil-simple') + 'تعديل</button></div></section>' +
     '<section class="card"><h3>المظهر</h3><div class="seg" style="margin-top:6px">' + [['auto', 'تلقائي'], ['light', 'فاتح'], ['dark', 'داكن']].map(([k, l]) => '<button data-act="theme" data-v="' + k + '" aria-pressed="' + (S.settings.theme === k) + '">' + l + '</button>').join('') + '</div></section>' +
-    '<section class="card"><h3>الروتين</h3><label class="check"><input type="checkbox" data-chg="adhkar"' + (S.settings.adhkar ? ' checked' : '') + '><span class="grow sm">إظهار تعويذ الصباح والمساء في روتين اليوم</span></label>' +
+    '<section class="card"><h3>الروتين</h3><label class="check"><input type="checkbox" data-chg="adhkar"' + (S.settings.adhkar ? ' checked' : '') + '><span class="grow sm">إظهار البنود الإيمانية في روتين اليوم (الأذكار والتعويذ والقرآن)، وتنبيه المناسبات الهجرية</span></label>' +
     '<div class="f" style="margin-top:6px"><label for="cur">العملة</label><input class="in" id="cur" data-chg="cur" value="' + esc(S.settings.currency) + '"></div></section>' +
     '<section class="card warn"><h3>مسح كل البيانات من هذا الجهاز</h3><p class="sm">لا يمكن التراجع. احفظوا نسخة احتياطية أولًا. اكتبوا كلمة <b>امسح</b> للتأكيد.</p><div class="f" style="margin-top:8px"><input class="in" id="wipe-in" autocomplete="off"></div><div class="btns" style="margin-top:8px"><button class="btn danger" data-act="wipe">' + ic('trash') + 'مسح البيانات</button></div></section>';
 };

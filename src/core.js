@@ -134,7 +134,7 @@ function blankState() {
     app: APP_ID, v: FORMAT, created: Date.now(),
     profile: null,
     events: [], growth: [], vaxCustom: [], appts: [], qs: [], journal: [],
-    vax: {}, ms: {},
+    vax: {}, ms: {}, sunan: {},
     routine: { items: clone(ROUTINE_DEFAULT), u: 0, log: {} },
     timers: {},
     settings: { theme: 'auto', schedule: 'eg', currency: 'ج.م', adhkar: true, lastBackup: 0, hard: {}, u: 0 },
@@ -144,9 +144,12 @@ function normalize(st) {
   const b = blankState();
   const o = Object.assign(b, st || {});
   for (const k of ['events', 'growth', 'vaxCustom', 'appts', 'qs', 'journal']) if (!Array.isArray(o[k])) o[k] = [];
-  for (const k of ['vax', 'ms', 'timers']) if (!o[k] || typeof o[k] !== 'object') o[k] = {};
+  for (const k of ['vax', 'ms', 'sunan', 'timers']) if (!o[k] || typeof o[k] !== 'object') o[k] = {};
   o.routine = Object.assign({ items: clone(ROUTINE_DEFAULT), u: 0, log: {} }, o.routine || {});
   if (!Array.isArray(o.routine.items) || !o.routine.items.length) o.routine.items = clone(ROUTINE_DEFAULT);
+  // faith items added in later versions appear in older notebooks too (default items are never deleted, only hidden)
+  for (const it of ROUTINE_DEFAULT) if (/^adhkar_/.test(it.id) && !o.routine.items.some((x) => x.id === it.id)) o.routine.items.push(clone(it));
+  for (const it of o.routine.items) if (ROUTINE_RENAMED[it.label]) it.label = ROUTINE_RENAMED[it.label];
   o.settings = Object.assign(blankState().settings, o.settings || {});
   return o;
 }
@@ -298,6 +301,7 @@ function mergeState(A, B) {
   for (const k of ['events', 'growth', 'vaxCustom', 'appts', 'qs', 'journal']) R[k] = mergeArr(A[k], B[k]);
   R.vax = mergeMap(A.vax, B.vax);
   R.ms = mergeMap(A.ms, B.ms);
+  R.sunan = mergeMap(A.sunan, B.sunan);
   if ((B.routine.u || 0) > (A.routine.u || 0)) R.routine.items = clone(B.routine.items);
   const L = R.routine.log;
   for (const day of Object.keys(B.routine.log || {})) {
