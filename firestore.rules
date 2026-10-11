@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function fam(fid) { return get(/databases/$(database)/documents/families/$(fid)); }
+    function isMember(fid) {
+      return signedIn() && exists(/databases/$(database)/documents/families/$(fid)/members/$(request.auth.uid));
+    }
+    match /users/{uid} {
+      allow read, write: if signedIn() && request.auth.uid == uid;
+    }
+    match /codes/{code} {
+      allow get: if signedIn();
+      allow create: if signedIn()
+        && request.resource.data.by == request.auth.uid
+        && fam(request.resource.data.fid).data.owner == request.auth.uid
+        && fam(request.resource.data.fid).data.code == code;
+    }
+    match /families/{fid} {
+      allow create: if signedIn() && request.resource.data.owner == request.auth.uid;
+      allow read: if isMember(fid);
+      allow update: if isMember(fid)
+        && request.resource.data.owner == resource.data.owner
+        && request.resource.data.code == resource.data.code;
+      match /members/{uid} {
+        allow read: if isMember(fid);
+        allow create: if signedIn() && request.auth.uid == uid
+          && (fam(fid).data.owner == uid || request.resource.data.code == fam(fid).data.code);
+        allow delete: if signedIn() && (request.auth.uid == uid || fam(fid).data.owner == request.auth.uid);
+      }
+      match /items/{key} {
+        allow read, write: if isMember(fid);
+      }
+    }
+  }
+}
